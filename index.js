@@ -36,23 +36,24 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
       readline.question(`Enter root directory (/var/www/html): `, (root_dir) => {
         if (!root_dir) {
           console.log("No root directory provided, cancelling");
-          return readline.close()
+          return readline.close();
         }
         options.root_dir = root_dir;
         readline.question(`Enter server_name (test.benwhybrow.com): `, (server_name) => {
           if (!server_name) {
             console.log("No server name provided, cancelling");
-            return readline.close()
+            return readline.close();
           }
           options.server_name = server_name;
           readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
             if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
               console.log("Incorrect value provided, cancelling");
-              return readline.close()
+              return readline.close();
             }
             options.ssl_install = ssl_install;
             nginx.standard(options).then((result) => {
-              console.log("VirtualHost Installation Complete!")
+              console.log("VirtualHost Installation Complete!");
+              return readline.close();
             })
           })
         })
@@ -84,7 +85,10 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
                 return readline.close();
               }
               options.source_ssl = source_ssl;
-              nginx.reverse(options);
+              nginx.reverse(options).then((result) => {
+                console.log("VirtualHost Installation Complete!");
+                return readline.close();
+              })
             })
           })
         })
@@ -110,7 +114,10 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
               return readline.close();
             }
             options.php_version = php_version;
-            nginx.php(options);
+            nginx.php(options).then((result) => {
+              console.log("VirtualHost Installation Complete!");
+              return readline.close();
+            })
           })
         })
       })
@@ -129,7 +136,10 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
             return readline.close();
           }
           options.server_name = server_name;
-          nginx.static(options);
+          nginx.static(options).then((result) => {
+            console.log("VirtualHost Installation Complete!");
+            return readline.close();
+          })
         })
       })
       break;
@@ -147,7 +157,10 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
             return readline.close();
           }
           options.redirect_link = redirect_link;
-          nginx.redirect(options);
+          nginx.redirect(options).then((result) => {
+            console.log("VirtualHost Installation Complete!");
+            return readline.close();
+          })
         })
       })
       break;
@@ -165,7 +178,10 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
             return readline.close();
           }
           options.server_name = server_name;
-          nginx.remove(options);
+          nginx.remove(options).then((result) => {
+            console.log("VirtualHost Removal Complete!");
+            return readline.close();
+          })
         })
       })
       break;

@@ -10,7 +10,7 @@ const {
  * Create symlink
  * 
  */
-const symlink = (server_name) => {
+const symlink = function(server_name) {
   new Promise((resolve, reject) => {
     exec(`sudo ln -s /etc/nginx/sites-available/${server_name} /etc/nginx/sites-enabled/`, (err, stdout, stderr) => {
       if (err) {
@@ -31,7 +31,7 @@ const symlink = (server_name) => {
  * SSL Install
  * 
  */
-const install_ssl = (server_name) => {
+const install_ssl = function(server_name) {
   new Promise((resolve, reject) => {
     exec(`sudo certbot --nginx -d ${server_name}`, (err, stdout, stderr) => {
       if (err) {
@@ -52,7 +52,7 @@ const install_ssl = (server_name) => {
  * Restart NGINX
  * 
  */
-const restart_nginx = () => {
+const restart_nginx = function() {
   new Promise((resolve, reject) => {
     console.log("Restarting NGINX");
     exec(`sudo systemctl reload nginx`, (err, stdout, stderr) => {
