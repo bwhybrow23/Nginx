@@ -101,7 +101,7 @@ const standard = async (options) => {
       }
 
       //Restart NGINX
-      restart_nginx.then((message) => console.log(message));
+      restart_nginx().then((message) => console.log(message));
       return resolve();
     });
   });
@@ -139,7 +139,7 @@ const reverse = async (options) => {
       }
 
       //Restart NGINX
-      restart_nginx.then((message) => console.log(message));
+      restart_nginx().then((message) => console.log(message));
       return resolve();
 
     });
@@ -178,7 +178,7 @@ const php = (options) => {
       }
 
       //Restart NGINX
-      restart_nginx.then((message) => console.log(message));
+      restart_nginx().then((message) => console.log(message));
       return resolve();
 
     });
@@ -217,7 +217,7 @@ const static = (options) => {
       }
 
       //Restart NGINX
-      restart_nginx.then((message) => console.log(message));
+      restart_nginx().then((message) => console.log(message));
       return resolve();
     });
 
@@ -256,7 +256,7 @@ const redirect = (options) => {
       }
 
       //Restart NGINX
-      restart_nginx.then((message) => console.log(message));
+      restart_nginx().then((message) => console.log(message));
       return resolve();
 
     });
@@ -310,7 +310,7 @@ const remove = (options) => {
     });
 
     //Restart NGINX
-    restart_nginx.then((message) => console.log(message));
+    restart_nginx().then((message) => console.log(message));
     return resolve();
 
   })
