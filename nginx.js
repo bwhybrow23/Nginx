@@ -11,7 +11,7 @@ const {
  * 
  */
 const symlink = function(server_name) {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     exec(`sudo ln -s /etc/nginx/sites-available/${server_name} /etc/nginx/sites-enabled/`, (err, stdout, stderr) => {
       if (err) {
         reject(Error(`${err.message}`));
@@ -32,7 +32,7 @@ const symlink = function(server_name) {
  * 
  */
 const install_ssl = function(server_name) {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     exec(`sudo certbot --nginx -d ${server_name}`, (err, stdout, stderr) => {
       if (err) {
         reject(Error(`${err.message}`));
@@ -53,7 +53,7 @@ const install_ssl = function(server_name) {
  * 
  */
 const restart_nginx = function() {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     console.log("Restarting NGINX");
     exec(`sudo systemctl reload nginx`, (err, stdout, stderr) => {
       if (err) {
@@ -75,7 +75,7 @@ const restart_nginx = function() {
  * 
  */
 const standard = async (options) => {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let root_dir = options.root_dir;
     let server_name = options.server_name;
     let ssl_install = options.ssl_install;
@@ -113,7 +113,7 @@ const standard = async (options) => {
  * 
  */
 const reverse = async (options) => {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let server_name = options.server_name;
     let source_host = options.source_host;
     let source_port = options.source_port;
@@ -153,7 +153,7 @@ const reverse = async (options) => {
  * 
  */
 const php = (options) => {
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let root_dir = options.root_dir;
     let server_name = options.server_name;
     let php_version = options.php_version;
@@ -193,7 +193,7 @@ const php = (options) => {
  */
 const static = (options) => {
 
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let root_dir = options.root_dir;
     let server_name = options.server_name;
 
@@ -232,7 +232,7 @@ const static = (options) => {
  */
 const redirect = (options) => {
 
-  new Promise((reject, resolve) => {
+  return new Promise((reject, resolve) => {
     let server_name = options.server_name;
     let redirect_link = options.redirect_link;
 
@@ -271,7 +271,7 @@ const redirect = (options) => {
  * 
  */
 const remove = (options) => {
-  new Promise((reject, resolve) => {
+  return new Promise((reject, resolve) => {
     let file_name = options.file_name;
     let server_name = options.server_name;
 
