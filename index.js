@@ -52,8 +52,8 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
             }
             options.ssl_install = ssl_install;
             nginx.standard(options).then((result) => {
+              readline.close();
               console.log("VirtualHost Installation Complete!");
-              return readline.close();
             })
           })
         })

@@ -19,6 +19,8 @@
 
 This repository stores the files for an NPM package that helps with installing and removing NGINX Virtual Hosts. 
 
+# THIS PACKAGE IS STILL IN DEVELOPMENT AND IS NOT COMPLETE! MAJOR BUGS WILL OCCUR!
+
 > **ONLY WORKS ON UBUNTU LINUX**
 
 ## Usage
@@ -26,6 +28,9 @@ The command will ask for all arguments once you run the main command below. Argu
 ```
 nginx
 ```
+
+## Known Bugs
+- Cannot run any sort of normal nginx commands due to the package using the `nginx` command.
 
 ## Donating
 
