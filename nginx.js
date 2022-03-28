@@ -83,7 +83,7 @@ const standard = async (options) => {
 
     let data = `server {\n    listen 80;\n    listen [::]:80;\n\n    root ${root_dir};\n    index index.php index.html index.htm index.nginx-debian.html;\n    server_name ${server_name};\n\n    location \/ {\n        try_files \\$uri \\$uri\/ =404;\n    }\n}`;
 
-    fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
+    fs.writeFile(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
     }, (err) => {
       console.log("NGINX File Created");
