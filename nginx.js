@@ -85,7 +85,7 @@ const standard = async (options) => {
 
     fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
-    }, function(err) {
+    }, (err) => {
       console.log("NGINX File Created");
       if (err) {
         return reject(Error(err));
