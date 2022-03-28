@@ -17,6 +17,13 @@ const readline = require('readline').createInterface({
 //Main Function File
 let nginx = require("./nginx");
 
+//Check that it's being ran on Linux
+if (process.platform != "linux") {
+  console.log("This NPM package only currently supports Linux systems at the moment.")
+  readline.close();
+  process.exit();
+}
+
 /** 
  * 
  * Install Choice
@@ -24,10 +31,7 @@ let nginx = require("./nginx");
  * 
  */
 let options = {};
-if (process.platform != "linux") {
-  console.log("This NPM package only currently supports Linux systems at the moment.")
-  return readline.close();
-}
+
 readline.question(`Please select an installation type: \n[1] Standard VirtualHost \n[2] Basic Reverse Proxy \n[3] Basic PHP VirtualHost \n[4] Static VirtualHost \n[5] Redirect Virtual Host \n[6] Remove Virtual Host \nChoice: `, (choice) => {
   options.choice = choice;
 

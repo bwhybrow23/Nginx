@@ -2,9 +2,9 @@
   "name": "nginx",
   "version": "1.0.3",
   "description": "An NPM package used for installing and configuring NGINX virtual hosts.",
-  "main": "nginx.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "nginx": "node index.js"
   },
   "keywords": [
     "node",
