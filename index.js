@@ -24,6 +24,13 @@ if (process.platform != "linux") {
   process.exit();
 }
 
+//Check whether the script has been ran with sudo (UID of Root is always 0)
+if (process.getuid() != 0) {
+  console.log("This script has to be ran using sudo as it is editing protected Nginx files. Please run the script again, but prefix it with \"sudo\"");
+  readline.close();
+  process.exit();
+}
+
 /** 
  * 
  * Install Choice
@@ -54,8 +61,10 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
               console.log("Incorrect value provided, cancelling");
               return readline.close();
             }
+
             options.ssl_install = ssl_install;
             nginx.standard(options).then((result) => {
+              cponsole.log(result)
               readline.close();
               console.log("VirtualHost Installation Complete!");
             })

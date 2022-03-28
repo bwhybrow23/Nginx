@@ -21,7 +21,8 @@ const symlink = (server_name) => {
         reject(Error(`${stderr}`));
         return;
       }
-      return resolve("Symlink created!");
+      // return resolve("Symlink created!");
+      return resolve(stdout);
     });
   })
 }
