@@ -21,8 +21,8 @@ const symlink = (server_name) => {
         reject(Error(`${stderr}`));
         return;
       }
-      // return resolve("Symlink created!");
-      return resolve(stdout);
+      return resolve("Symlink created!");
+      // return resolve(stdout);
     });
   })
 }
@@ -83,7 +83,7 @@ const standard = async (options) => {
 
     let data = `server {\n    listen 80;\n    listen [::]:80;\n\n    root ${root_dir};\n    index index.php index.html index.htm index.nginx-debian.html;\n    server_name ${server_name};\n\n    location \/ {\n        try_files \\$uri \\$uri\/ =404;\n    }\n}`;
 
-    fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
+    fs.writeFile(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
     }, function(err) {
       console.log("NGINX File Created");
@@ -122,7 +122,7 @@ const reverse = async (options) => {
 
     let data = `server {\n    listen 80;\n    listen [::]:80;\n\n    server_name ${server_name};\n\n    location \/ {\n        proxy_pass ${source_ssl}:\/\/${source_host}:${source_port};\n\n    }\n}`;
 
-    fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
+    fs.writeFile(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
     }, function(err) {
       console.log("NGINX File Created");
@@ -161,7 +161,7 @@ const php = (options) => {
 
     let data = `server {\n    listen 80;\n    listen [::]:80;\n\n    root ${root_dir};\n    index index.php index.html index.htm index.nginx-debian.html;\n    server_name ${server_name};\n\n    location \/ {\n        try_files $uri $uri\/ =404;\n    }\n\n    location ~* \\.php$ {\n            fastcgi_pass                    unix:\/var\/run\/php\/php${php_version}-fpm.sock;\n            fastcgi_index                   index.php;\n            fastcgi_split_path_info         ^(.+\\.php)(.*)$;\n            include                         fastcgi_params;\n            fastcgi_param PATH_INFO         \\$fastcgi_path_info;\n            fastcgi_param SCRIPT_FILENAME   \\$document_root\\$fastcgi_script_name;\n    }\n\n}`;
 
-    fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
+    fs.writeFile(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
     }, function(err) {
       console.log("NGINX File Created");
@@ -200,7 +200,7 @@ const static = (options) => {
 
     let data = `server {\n    listen 80;\n    listen [::]:80;\n\n    server_name ${server_name};\n    root ${root_dir};\n    index index.php index.html index.htm index.nginx-debian.html;\n\n    location \/ {\n        \n        try_files \\$uri \\$uri\/ \/index.html;\n        autoindex on;\n        autoindex_exact_size off;\n        autoindex_localtime on;\n\n    }\n\n    # Hide hidden stuff (starts with .)\n    location ~ .*\/\\. {\n           return 403;\n    }\n}`;
 
-    fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
+    fs.writeFile(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
     }, function(err) {
       console.log("NGINX File Created");
@@ -239,7 +239,7 @@ const redirect = (options) => {
 
     let data = `server {\n    listen 80;\n    listen [::]:80;\n\n    server_name ${server_name};\n    rewrite ^\/(.*)$ ${redirect_link} permanent;\n}`;
 
-    fs.writeFileSync(`/etc/nginx/sites-available/${server_name}`, data, {
+    fs.writeFile(`/etc/nginx/sites-available/${server_name}`, data, {
       flag: 'w+'
     }, function(err) {
       console.log("NGINX File Created");

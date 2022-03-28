@@ -64,7 +64,7 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
 
             options.ssl_install = ssl_install;
             nginx.standard(options).then((result) => {
-              cponsole.log(result)
+              // console.log(result)
               readline.close();
               console.log("VirtualHost Installation Complete!");
             })
@@ -98,9 +98,17 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
                 return readline.close();
               }
               options.source_ssl = source_ssl;
-              nginx.reverse(options).then((result) => {
-                console.log("VirtualHost Installation Complete!");
-                return readline.close();
+              readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
+                if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
+                  console.log("Incorrect value provided, cancelling");
+                  return readline.close();
+                }
+
+                options.ssl_install = ssl_install;
+                nginx.reverse(options).then((result) => {
+                  console.log("VirtualHost Installation Complete!");
+                  return readline.close();
+                })
               })
             })
           })
@@ -127,9 +135,17 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
               return readline.close();
             }
             options.php_version = php_version;
-            nginx.php(options).then((result) => {
-              console.log("VirtualHost Installation Complete!");
-              return readline.close();
+            readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
+              if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
+                console.log("Incorrect value provided, cancelling");
+                return readline.close();
+              }
+
+              options.ssl_install = ssl_install;
+              nginx.php(options).then((result) => {
+                console.log("VirtualHost Installation Complete!");
+                return readline.close();
+              })
             })
           })
         })
@@ -149,9 +165,17 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
             return readline.close();
           }
           options.server_name = server_name;
-          nginx.static(options).then((result) => {
-            console.log("VirtualHost Installation Complete!");
-            return readline.close();
+          readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
+            if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
+              console.log("Incorrect value provided, cancelling");
+              return readline.close();
+            }
+
+            options.ssl_install = ssl_install;
+            nginx.static(options).then((result) => {
+              console.log("VirtualHost Installation Complete!");
+              return readline.close();
+            })
           })
         })
       })
@@ -170,9 +194,17 @@ readline.question(`Please select an installation type: \n[1] Standard VirtualHos
             return readline.close();
           }
           options.redirect_link = redirect_link;
-          nginx.redirect(options).then((result) => {
-            console.log("VirtualHost Installation Complete!");
-            return readline.close();
+          readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
+            if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
+              console.log("Incorrect value provided, cancelling");
+              return readline.close();
+            }
+
+            options.ssl_install = ssl_install;
+            nginx.redirect(options).then((result) => {
+              console.log("VirtualHost Installation Complete!");
+              return readline.close();
+            })
           })
         })
       })
