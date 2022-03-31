@@ -3,9 +3,6 @@
   "version": "1.0.4",
   "description": "An NPM package used for installing and configuring NGINX virtual hosts.",
   "main": "index.js",
-  "scripts": {
-    "nginx": "node index.js"
-  },
   "keywords": [
     "node",
     "nginx",
@@ -21,7 +18,7 @@
     "commander": "^7.2.0"
   },
   "bin": {
-    "nginx": "./index.js"
+    "nginx-install": "./index.js"
   },
   "homepage": "https://benwhybrow.com/",
   "repository": {
