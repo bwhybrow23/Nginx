@@ -1,20 +1,9 @@
 #!/usr/bin/env node
 
-/**
- * 
- * Const's
- * 
- */
-//Readline
-const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
 //File Imports
 const { ubuntuOS } = require('./systems/ubuntu');
 const { windowsOS } = require('./systems/windows');
-const { macOS } = require('./systems/mac');
+// const { macOS } = require('./systems/mac');
 
 //OS => correct file to run
 const os = process.platform;
@@ -23,8 +12,8 @@ switch (os) {
   case "win32":
     
     //Windows
-    // windowsOS();
-    console.log("Currently this doesn't support Windows. The support for NGINX and Certbot isn't great enough to consider it. If you are interested, please contact me.");
+    new windowsOS();
+    // console.log("Currently this doesn't support Windows. The support for NGINX and Certbot isn't great enough to consider it. If you are interested, please contact me.");
 
     break;
 

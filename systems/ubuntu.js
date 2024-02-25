@@ -1,10 +1,7 @@
 //Global Variables
-const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 const fs = require("fs");
 const { exec } = require("child_process");
+const prompt = require('prompt');
 
 /** 
  * 
@@ -15,216 +12,277 @@ const { exec } = require("child_process");
 class ubuntuOS {
   constructor() {
 
-    this.options = {};
+    //Prompt
+    prompt.start();
 
-    //Check whether the script has been ran with sudo (UID of Root is always 0)
+    let options = {};
+
+    //Check whether the script has been ran with sudo (UID of Root is always 0). If not, exit with error
     if (process.getuid() != 0) {
       console.log("This script has to be ran using sudo as it is editing protected Nginx files. Please run the script again, but prefix it with \"sudo\"");
-      readline.close();
-      process.exit();
+      return process.exit();
     }
 
-    //Asking the Questions
-    readline.question(`Please select an installation type: \n[1] Standard VirtualHost \n[2] Basic Reverse Proxy \n[3] Basic PHP VirtualHost \n[4] Static VirtualHost \n[5] Redirect Virtual Host \n[6] Remove Virtual Host \nChoice: `, (choice) => {
-      options.choice = choice;
-    
-      switch (choice) {
+    //Installation Type
+    prompt.get([{
+      name: "choice",
+      description: "Please select an installation type: \n[1] Standard VirtualHost \n[2] Basic Reverse Proxy \n[3] Basic PHP VirtualHost \n[4] Static VirtualHost \n[5] Redirect Virtual Host \n[6] Remove Virtual Host \nChoice: ",
+      required: true,
+      type: "string",
+      pattern: /^[1-6]+$/
+    }], function (err, result) {
+
+      //Error Handling
+      if (err) {
+        return console.log("Error: ", err);
+      };
+
+      options.choice = result.choice;
+
+      //Switch based on above choice
+      switch (options.choice) {
+        // Standard VirtualHost
         case "1":
-          readline.question(`Enter root directory (/var/www/html): `, (root_dir) => {
-            if (!root_dir) {
-              console.log("No root directory provided, cancelling");
-              return readline.close();
-            }
-            options.root_dir = root_dir;
-            readline.question(`Enter server_name (test.benwhybrow.com): `, (server_name) => {
-              if (!server_name) {
-                console.log("No server name provided, cancelling");
-                return readline.close();
-              }
-              options.server_name = server_name;
-              readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
-                if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
-                  console.log("Incorrect value provided, cancelling");
-                  return readline.close();
-                }
-    
-                options.ssl_install = ssl_install;
-                nginx.standard(options).then((result) => {
-                  // console.log(result)
-                  readline.close();
-                  console.log("VirtualHost Installation Complete!");
-                })
-              })
+          prompt.get([{
+            name: "root_dir",
+            description: "Enter root directory (/var/www/html):",
+            required: true,
+            default: "/var/www/html",
+            type: "string"
+          }, {
+            name: "server_name",
+            description: "Enter server_name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "ssl_install",
+            description: "Would you like SSL installed? (y|n):",
+            required: true,
+            type: "string"
+          }], function (err, result) {
+
+            //Error Handling
+            if (err) {
+              return console.log("Error: ", err);
+            };
+
+            options.root_dir = result.root_dir;
+            options.server_name = result.server_name;
+            options.ssl_install = result.ssl_install;
+
+            standard(options).then((result) => {
+              console.log(result)
+              console.log("VirtualHost Installation Complete!");
             })
-          })
+
+          });
           break;
     
+        // Basic Reverse Proxy
         case "2":
-          readline.question(`Enter server_name (test.benwhybrow.com): `, (server_name) => {
-            if (!server_name) {
-              console.log("No server name provided, cancelling");
-              return readline.close();
-            }
-            options.server_name = server_name;
-            readline.question(`Enter source host (localhost): `, (source_host) => {
-              if (!source_host) {
-                console.log("No source host provided, cancelling");
-                return readline.close();
-              }
-              options.source_host = source_host;
-              readline.question(`Enter source port (3001): `, (source_port) => {
-                if (!source_port) {
-                  console.log("No source port provided, cancelling");
-                  return readline.close();
-                }
-                options.source_port = source_port;
-                readline.question(`Is the source using http or https? (http|https): `, (source_ssl) => {
-                  if (!source_ssl) {
-                    console.log("No source SSL provided, cancelling");
-                    return readline.close();
-                  }
-                  options.source_ssl = source_ssl;
-                  readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
-                    if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
-                      console.log("Incorrect value provided, cancelling");
-                      return readline.close();
-                    }
-    
-                    options.ssl_install = ssl_install;
-                    nginx.reverse(options).then((result) => {
-                      console.log("VirtualHost Installation Complete!");
-                      return readline.close();
-                    })
-                  })
-                })
-              })
+          prompt.get([{
+            name: "server_name",
+            description: "Enter server_name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "source_host",
+            description: "Enter source host (localhost):",
+            required: true,
+            default: "localhost",
+            type: "string"
+          }, {
+            name: "source_port",
+            description: "Enter source port (3001):",
+            required: true,
+            default: "3001",
+            type: "number"
+          }, {
+            name: "source_ssl",
+            description: "Enter source SSL (http|https):",
+            required: true,
+            type: "string"
+          }, {
+            name: "ssl_install",
+            description: "Would you like SSL installed? (y|n):",
+            required: true,
+            type: "string"
+          }], function (err, result) {
+
+            //Error Handling
+            if (err) {
+              return console.log("Error: ", err);
+            };
+
+            options.server_name = result.server_name;
+            options.source_host = result.source_host;
+            options.source_port = result.source_port;
+            options.source_ssl = result.source_ssl;
+            options.ssl_install = result.ssl_install;
+
+            reverse(options).then((result) => {
+              console.log(result)
+              console.log("VirtualHost Installation Complete!");
             })
-          })
+
+          });
           break;
     
+        // Basic PHP VirtualHost
         case "3":
-          readline.question(`Enter root directory (/var/www/html): `, (root_dir) => {
-            if (!root_dir) {
-              console.log("No root directory provided, cancelling");
-              return readline.close();
-            }
-            options.root_dir = root_dir;
-            readline.question(`Enter server_name (test.benwhybrow.com): `, (server_name) => {
-              if (!server_name) {
-                console.log("No server name provided, cancelling");
-                return readline.close();
-              }
-              options.server_name = server_name;
-              readline.question(`Enter your php-fpm version (7.2): `, (php_version) => {
-                if (!php_version) {
-                  console.log("No PHP version provided, cancelling");
-                  return readline.close();
-                }
-                options.php_version = php_version;
-                readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
-                  if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
-                    console.log("Incorrect value provided, cancelling");
-                    return readline.close();
-                  }
-    
-                  options.ssl_install = ssl_install;
-                  nginx.php(options).then((result) => {
-                    console.log("VirtualHost Installation Complete!");
-                    return readline.close();
-                  })
-                })
-              })
+          prompt.get([{
+            name: "root_dir",
+            description: "Enter root directory (/var/www/html):",
+            required: true,
+            default: "/var/www/html",
+            type: "string"
+          }, {
+            name: "server_name",
+            description: "Enter server_name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "php_version",
+            description: "Enter your php-fpm version (7.2):",
+            required: true,
+            default: "7.2",
+            type: "string"
+          }, {
+            name: "ssl_install",
+            description: "Would you like SSL installed? (y|n):",
+            required: true,
+            type: "string"
+          }], function (err, result) {
+
+            //Error Handling
+            if (err) {
+              return console.log("Error: ", err);
+            };
+
+            options.root_dir = result.root_dir;
+            options.server_name = result.server_name;
+            options.php_version = result.php_version;
+            options.ssl_install = result.ssl_install;
+
+            php(options).then((result) => {
+              console.log(result)
+              console.log("VirtualHost Installation Complete!");
             })
-          })
+
+          });
           break;
     
+        // Static VirtualHost
         case "4":
-          readline.question(`Enter root directory (/var/www/html): `, (root_dir) => {
-            if (!root_dir) {
-              console.log("No root directory provided, cancelling");
-              return readline.close();
-            }
-            options.root_dir = root_dir;
-            readline.question(`Enter server_name (test.benwhybrow.com): `, (server_name) => {
-              if (!server_name) {
-                console.log("No server name provided, cancelling");
-                return readline.close();
-              }
-              options.server_name = server_name;
-              readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
-                if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
-                  console.log("Incorrect value provided, cancelling");
-                  return readline.close();
-                }
-    
-                options.ssl_install = ssl_install;
-                nginx.static(options).then((result) => {
-                  console.log("VirtualHost Installation Complete!");
-                  return readline.close();
-                })
-              })
+          prompt.get([{
+            name: "root_dir",
+            description: "Enter root directory (/var/www/html):",
+            required: true,
+            default: "/var/www/html",
+            type: "string"
+          }, {
+            name: "server_name",
+            description: "Enter server_name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "ssl_install",
+            description: "Would you like SSL installed? (y|n):",
+            required: true,
+            type: "string"
+          }], function (err, result) {
+
+            //Error Handling
+            if (err) {
+              return console.log("Error: ", err);
+            };
+
+            options.root_dir = result.root_dir;
+            options.server_name = result.server_name;
+            options.ssl_install = result.ssl_install;
+
+            staticVH(options).then((result) => {
+              console.log(result)
+              console.log("VirtualHost Installation Complete!");
             })
-          })
+
+          });
           break;
     
+        // Redirect VirtualHost
         case "5":
-          readline.question(`Enter server_name (test.benwhybrow.com): `, (server_name) => {
-            if (!server_name) {
-              console.log("No server name provided, cancelling");
-              return readline.close();
-            }
-            options.server_name = server_name;
-            readline.question(`Enter the link to redirect to (new.benwhybrow.com): `, (redirect_link) => {
-              if (!redirect_link) {
-                console.log("No redirect link provided, cancelling");
-                return readline.close();
-              }
-              options.redirect_link = redirect_link;
-              readline.question(`Would you like SSL installed? (y|n): `, (ssl_install) => {
-                if (ssl_install.split("\n")[0] !== "y" && ssl_install.split("\n")[0] !== "n") {
-                  console.log("Incorrect value provided, cancelling");
-                  return readline.close();
-                }
-    
-                options.ssl_install = ssl_install;
-                nginx.redirect(options).then((result) => {
-                  console.log("VirtualHost Installation Complete!");
-                  return readline.close();
-                })
-              })
+          prompt.get([{
+            name: "server_name",
+            description: "Enter server_name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "redirect_link",
+            description: "Enter the link to redirect to (new.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "ssl_install",
+            description: "Would you like SSL installed? (y|n):",
+            required: true,
+            type: "string"
+          }], function (err, result) {
+
+            //Error Handling
+            if (err) {
+              return console.log("Error: ", err);
+            };
+
+            options.server_name = result.server_name;
+            options.redirect_link = result.redirect_link;
+            options.ssl_install = result.ssl_install;
+
+            redirect(options).then((result) => {
+              console.log(result)
+              console.log("VirtualHost Installation Complete!");
             })
-          })
+
+          });
           break;
     
+        // Remove VirtualHost
         case "6":
-          readline.question(`Enter the config file name (test.benwhybrow.com): `, (file_name) => {
-            if (!file_name) {
-              console.log("No file name provided, cancelling");
-              return readline.close();
-            }
-            options.file_name = file_name;
-            readline.question(`Enter the server name (test.benwhybrow.com): `, (server_name) => {
-              if (!server_name) {
-                console.log("No server name provided, cancelling");
-                return readline.close();
-              }
-              options.server_name = server_name;
-              nginx.remove(options).then((result) => {
-                console.log("VirtualHost Removal Complete!");
-                return readline.close();
-              })
+          prompt.get([{
+            name: "file_name",
+            description: "Enter the config file name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }, {
+            name: "server_name",
+            description: "Enter the server name (test.benwhybrow.com):",
+            required: true,
+            type: "string"
+          }], function (err, result) {
+
+            //Error Handling
+            if (err) {
+              return console.log("Error: ", err);
+            };
+
+            options.file_name = result.file_name;
+            options.server_name = result.server_name;
+
+            remove(options).then((result) => {
+              console.log(result)
+              console.log("VirtualHost Removal Complete!");
             })
-          })
+
+          });
           break;
     
         default:
           console.log("Invalid option choice");
-          readline.close();
           break;
       }
-    })
 
-    /**
+        });
+
+/**
  * 
  * Create symlink
  * 
@@ -413,7 +471,7 @@ php() = (options) => {
  * Static VirtualHost 
  * 
  */
-static() = (options) => {
+staticVH() = (options) => {
 
   return new Promise((resolve, reject) => {
     let root_dir = options.root_dir;
