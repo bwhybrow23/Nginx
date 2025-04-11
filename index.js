@@ -2,7 +2,7 @@
 import fs from 'fs';
 
 //File Imports
-import { linuxOS } from './systems/linux';
+import { linuxOS } from './systems/linux.js';
 // import { windowsOS } from './systems/windows';
 
 //OS => correct file to run
@@ -23,7 +23,7 @@ switch (os) {
 
     let distro = detectOS();
     if (distro != 'unknown') {
-      linuxOS(distro)
+      new linuxOS(distro)
     } else {
       console.log("Currently, this Linux distro is not supported. If you think it should be, please open an issue on GitHub.");
     }

@@ -4,19 +4,6 @@ import { exec } from 'child_process';
 import prompt from 'prompt';
 
 /**
- * Detect Linux Distro
- */
-function detectOS() {
-  const releaseFile = fs.readFileSync('/etc/os-release', 'utf8');
-  if (releaseFile.includes('Debian')) return 'debian';
-  if (releaseFile.includes('Ubuntu')) return 'ubuntu';
-  if (releaseFile.includes('CentOS')) return 'centos';
-  if (releaseFile.includes('Red Hat')) return 'rhel';
-  if (releaseFile.includes('Arch')) return 'arch';
-  return 'debian'; // fallback default
-}
-
-/**
  * OS-Specific Defaults
  */
 const distroDefaults = {
@@ -48,8 +35,8 @@ const distroDefaults = {
 };
 
 class linuxOS {
-  constructor() {
-    const distro = detectOS();
+  constructor(distroDetect) {
+    const distro = distroDetect;
     this.config = distroDefaults[distro];
 
     prompt.start();
