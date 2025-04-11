@@ -1,6 +1,7 @@
 {
   "name": "nginx",
   "version": "1.1.0",
+  "type": "module",
   "description": "An NPM package used for installing and configuring NGINX virtual hosts.",
   "main": "index.js",
   "keywords": [
