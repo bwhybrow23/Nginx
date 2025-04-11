@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+import fs from 'fs';
 
 //File Imports
-const { ubuntuOS } = require('./systems/debian');
-const { windowsOS } = require('./systems/windows');
-// const { macOS } = require('./systems/mac');
+import { ubuntuOS } from './systems/debian';
+// import { windowsOS } from './systems/windows';
 
 //OS => correct file to run
+// eslint-disable-next-line no-undef
 const os = process.platform;
 const distro = fs.readFileSync('/etc/os-release', 'utf8');
 
@@ -24,7 +25,7 @@ switch (os) {
     if(distro.includes("Ubuntu") || distro.includes("Debian")) {
       ubuntuOS();
     } else {
-      return console.log("At the moment, this OS is not supported.");
+      console.log("At the moment, this OS is not supported.");
     }
 
   break;
@@ -32,7 +33,6 @@ switch (os) {
   case "darwin":
 
     //MacOS
-    // macOS();
     console.log("Currently this doesn't support MacOS. The support for NGINX and Certbot isn't great enough to consider it. If you are interested, please contact me.");
 
   break;
