@@ -25,7 +25,7 @@ This repository stores the files for an NPM package that helps with installing a
 
 ## Usage
 
-> **ONLY WORKS ON UBUNTU LINUX AT THIS TIME**
+> **ONLY WORKS ON UBUNTU LINUX AT THIS TIME!**
 
 ### NPX
 
@@ -56,6 +56,9 @@ nginx-install
 ```
 
 Yes, it'd be nice to have `nginx`, but that causes a load of interferences with the actual Nginx service as it uses the same command. But that's okay, because we can use this command instead.
+
+## ToDo List
+You can find NGINX's todo list [here](https://github.com/bwhybrow23/Nginx/blob/master/TODO.md). 
 
 ## Known Bugs
 
