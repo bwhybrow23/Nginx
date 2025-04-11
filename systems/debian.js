@@ -9,7 +9,7 @@ const prompt = require('prompt');
  * Choices: Standard, Reverse Proxy, PHP, Static, Redirect, Remove
  * 
  */
-class ubuntuOS {
+class debianOS {
   constructor() {
 
     //Prompt
@@ -603,5 +603,5 @@ remove() = (options) => {
 }
 
 module.exports = {
-  ubuntuOS
+  debianOS
 }
