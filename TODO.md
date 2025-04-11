@@ -2,18 +2,17 @@
 ### This is less than a tracker for me, and more for you to see what needs to be implemented.
 
 ## IMPORTANT
-- [ ] Remove readline and use prompt instead - causing duplicate characters on an input
+- [X] Remove readline and use prompt instead - causing duplicate characters on an input
 
 ## General
 - [X] Segregate files into different OS's
 - [X] OS Detection
 
 ## Linux Support
-- [ ] Remove readline and use prompt instead
+- [X] Remove readline and use prompt instead
 - [ ] Add support for other distros
 
 ## Windows Support
-- [ ] Remove readline and use prompt instead
 - [ ] Add support for Windows full-stop
 - [ ] When installing SSL, manually import certificate into Nginx configuration
 - [ ] Use of NGINX's "include" function to use .conf files, rather than directly editing the main .conf file. [See this](https://stackoverflow.com/a/23413380/8826843)
