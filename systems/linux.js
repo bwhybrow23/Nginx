@@ -34,11 +34,16 @@ const distroDefaults = {
   }
 };
 
+/**
+ * Constructor for Linux
+ */
 class linuxOS {
   constructor(distroDetect) {
+    // Pull distro from index.js and match the config
     const distro = distroDetect;
     this.config = distroDefaults[distro];
 
+    // Start prompt in command line
     prompt.start();
     const options = {};
 
@@ -49,13 +54,14 @@ class linuxOS {
     }
 
     // Check whether Nginx is installed
-    exec('nginx -v', (error, stdout, stderr) => {
+    exec('nginx -v', (error) => {
       if (error) { 
         console.log("Nginx is not installed - please install this using the applicable package manager and try again.")
         return process.exit();
       }
     })
 
+    // Prompt 1 - Installation Type
     prompt.get([{
       name: "choice",
       description: "Select installation type:\n[1] Standard\n[2] Reverse Proxy\n[3] PHP\n[4] Static\n[5] Redirect\n[6] Remove\nChoice: ",
@@ -92,7 +98,9 @@ class linuxOS {
     });
   }
 
-  // Prompts
+  /**
+   * Prompt Functions
+   */
   standardPrompt(options) {
     prompt.get([
       { name: "root_dir", description: "Root directory", default: "/var/www/html", required: true },
@@ -167,10 +175,16 @@ class linuxOS {
     });
   }
 
-  // Utility Methods
+  /**
+   * Utility Methods
+   */
   symlink(server_name) {
     return new Promise((resolve, reject) => {
+      // Fetch paths from config
       const { nginxSitesAvailable, nginxSitesEnabled } = this.config;
+      // Check if symlink is needed (centos uses conf.d)
+      if (nginxSitesAvailable === nginxSitesEnabled) resolve("Symlink not needed");
+      // Create symlink
       exec(`ln -s ${nginxSitesAvailable}${server_name} ${nginxSitesEnabled}`, (err, stdout, stderr) => {
         if (err || stderr) return reject(Error(err?.message || stderr));
         resolve("Symlink created!");
@@ -196,7 +210,9 @@ class linuxOS {
     });
   }
 
-  // VirtualHost Methods
+  /**
+   * Virtual Host Methods
+   */
   standard(options) {
     return this._writeConfig(options, `server {
   listen 80;
@@ -275,6 +291,7 @@ class linuxOS {
 }`);
   }
 
+  // Remove method
   remove(options) {
     const { nginxSitesAvailable, nginxSitesEnabled } = this.config;
     exec(`rm ${nginxSitesAvailable}${options.file_name}`, () => {});
