@@ -42,10 +42,19 @@ class linuxOS {
     prompt.start();
     const options = {};
 
+    // Check script is ran with sudo or has root privileges
     if (process.getuid() != 0) {
       console.log("Please run this script with sudo.");
       return process.exit();
     }
+
+    // Check whether Nginx is installed
+    exec('nginx -v', (error, stdout, stderr) => {
+      if (error) { 
+        console.log("Nginx is not installed - please install this using the applicable package manager and try again.")
+        return process.exit();
+      }
+    })
 
     prompt.get([{
       name: "choice",
